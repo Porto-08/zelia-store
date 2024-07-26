@@ -2,11 +2,14 @@
 
 import { useEffect, useState } from "react";
 import { Product } from "../types";
-import { getProduct } from "../../../../api/modules/products";
+import { deleteProduct, getProduct } from "../../../../api/modules/products";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { Category } from "@/app/categories/types";
 import { getCategories } from "../../../../api/modules/categories";
+import { updateProduct } from "../../../../api/modules/products";
 import Link from "next/link";
+import { toast } from "react-toastify";
+import { useRouter } from "next/navigation";
 
 type PageParams = {
   params: {
@@ -29,6 +32,8 @@ export default function ProductPage({ params }: PageParams) {
     handleSubmit,
     formState: { errors },
   } = useForm<ProductForm>();
+
+  const router = useRouter();
 
   useEffect(() => {
     async function fetchProduct() {
@@ -56,7 +61,27 @@ export default function ProductPage({ params }: PageParams) {
   }, [params.id]);
 
   const onSubmit: SubmitHandler<ProductForm> = async (data) => {
-    console.log(data);
+    try {
+      await updateProduct(Number(params.id), data);
+      toast.success("Produto atualizado com sucesso!");
+
+      router.push("/products");
+    } catch (error) {
+      console.error(error);
+      toast.error("Ocorreu um erro ao atualizar o produto.");
+    }
+  };
+
+  const deleteProductHandler = async () => {
+    try {
+      await deleteProduct(Number(params.id));
+      toast.success("Produto excluído com sucesso!");
+    } catch (error) {
+      console.error(error);
+      toast.error("Ocorreu um erro ao excluir o produto.");
+    }  finally {
+      router.push("/products");
+    }
   };
 
   return (
@@ -149,7 +174,7 @@ export default function ProductPage({ params }: PageParams) {
 
             <div className="mt-6 flex gap-5">
               <button type="submit" className="btn btn-primary text-white">
-                Salvar
+                Editar produto
               </button>
               <Link href="/products" className="btn btn-secondary text-white">
                 Voltar
@@ -165,7 +190,12 @@ export default function ProductPage({ params }: PageParams) {
           tenha certeza do que está fazendo.
         </h3>
 
-        <button className="btn btn-error text-white">Excluir produto</button>
+        <button
+          onClick={deleteProductHandler}
+          className="btn btn-error text-white"
+        >
+          Excluir produto
+        </button>
       </section>
     </main>
   );

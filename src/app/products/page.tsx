@@ -27,7 +27,7 @@ export default function ProductsPage() {
           <span>Aqui você encontra todos os produtos disponíveis.</span>
         </div>
 
-        <Link href="/add-product" className="btn btn-primary text-white">
+        <Link href="/products/add-product" className="btn btn-primary text-white">
           Adicionar produto
         </Link>
       </div>
