@@ -18,7 +18,7 @@ export async function getProducts(): Promise<Product[]> {
   }
 }
 
-export async function getProduct(id: number): Promise<any> {
+export async function getProduct(id: number): Promise<Product | null> {
   try {
     let { data, error } = await supabase.from("products").select(`
       *,
