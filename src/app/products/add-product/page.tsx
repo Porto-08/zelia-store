@@ -1,5 +1,5 @@
 "use client";
-import { Category } from "@/app/categories/types";
+import { Category } from "../../category/types";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
