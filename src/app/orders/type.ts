@@ -17,6 +17,20 @@ export type Order = {
   }
 };
 
+export type OrderDTO = {
+  payment_type_id: number;
+  customer_name: string;
+  customer_phone: string;
+  total_price: number;
+}
+
+export type OrderItemsDTO = {
+  order_id: number;
+  product_id: number;
+  quantity: number;
+  price: number;
+}
+
 export type OrderItems = {
   id: number;
   order_id: number;
@@ -35,4 +49,5 @@ export type OrderItemsForm = {
   payment_type_id: number;
   customer_name?: string;
   customer_phone?: string;
+  total_price?: number;
 }

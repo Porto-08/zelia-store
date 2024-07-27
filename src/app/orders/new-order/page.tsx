@@ -7,6 +7,8 @@ import { useEffect, useState } from "react";
 import { getPaymentTypes } from "../../../../api/modules/payment-types";
 import { Product } from "@/app/products/types";
 import { getProducts } from "../../../../api/modules/products";
+import { createOrder, createOrderItem } from "../../../../api/modules/orders";
+import { toast } from "react-toastify";
 
 export default function NewOrderPage() {
   const {
@@ -17,6 +19,68 @@ export default function NewOrderPage() {
   const [paymentTypes, setPaymentTypes] = useState<PaymentType[]>([]);
   const [products, setProducts] = useState<Product[]>([]);
   const [orderPrice, setOrderPrice] = useState(0);
+
+  const [orderItems, setOrderItems] = useState<OrderItemsForm[]>([]);
+
+  const incrementOrderPrice = (price: number) => {
+    setOrderPrice(orderPrice + price);
+  }
+
+  const decrementOrderPrice = (price: number) => {
+    if (orderPrice - price < 0) {
+      return;
+    }
+
+    setOrderPrice(orderPrice - price);
+  }
+
+  const incrementProductQuantity = (productId: number) => {
+    const product = products.find((product) => product.id === productId);
+
+    if (!product) {
+      return;
+    }
+
+    const orderItem = orderItems.find((orderItem) => orderItem.product_id === productId);
+
+    if (orderItem) {
+      if (orderItem.quantity === product.quantity) {
+        return;
+      }
+
+      orderItem.quantity += 1;
+      setOrderItems([...orderItems]);
+    } else {
+      setOrderItems([...orderItems, { product_id: productId, quantity: 1, price: product.price, payment_type_id: 1 }]);
+    }
+
+    incrementOrderPrice(product.price);
+  }
+
+  const decrementProductQuantity = (productId: number) => {
+    const product = products.find((product) => product.id === productId);
+
+    if (!product) {
+      return;
+    }
+
+    const orderItem = orderItems.find((orderItem) => orderItem.product_id === productId);
+
+    if (!orderItem) {
+      return;
+    }
+
+    if (orderItem.quantity === 1) {
+      setOrderItems(orderItems.filter((orderItem) => orderItem.product_id !== productId));
+    } else {
+      orderItem.quantity -= 1;
+      setOrderItems([...orderItems]);
+    }
+
+    decrementOrderPrice(product.price);
+  }
+
+
 
   const router = useRouter();
 
@@ -46,7 +110,33 @@ export default function NewOrderPage() {
   }, []);
 
   async function onSubmit(data: OrderItemsForm) {
-    console.log(data);
+    
+    try {
+      const order = await createOrder({
+        payment_type_id: data.payment_type_id,
+        customer_name: data.customer_name || "",
+        customer_phone: data.customer_phone || "",
+        total_price: orderPrice,
+      });
+  
+      orderItems.forEach(async (orderItem) => {
+        const orderItemData = {
+          order_id: order.id,
+          product_id: orderItem.product_id,
+          quantity: orderItem.quantity,
+          price: orderItem.price * orderItem.quantity,
+        };
+
+        await createOrderItem(orderItemData);
+      });
+
+      toast.success("Venda criada com sucesso");
+
+      router.push("/orders");
+    } catch (error) {
+      console.error(error);
+      toast.error("Erro ao criar venda");
+    }
   }
 
   return (
@@ -64,25 +154,24 @@ export default function NewOrderPage() {
                 {product.name} - R$ {product.price}
               </h2>
 
-              {/* botoes de adicionar e remover e quantidade do produto */}
               <div className="flex gap-5 mt-5">
                 <button
                   className="btn btn-primary text-gray-300 w-10"
-                  onClick={() => setOrderPrice(orderPrice + product.price)}
+                  onClick={() => incrementProductQuantity(product.id)}
                 >
                   +
                 </button>
 
                 <input
                   type="number"
-                  className="input text-center input-primary w-12"
-                  value={0}
+                  className="input input-primary w-20"
+                  value={orderItems.find((orderItem) => orderItem.product_id === product.id)?.quantity || 0}
                   readOnly
                 />
 
                 <button
                   className="btn btn-secondary text-gray-300 w-10"
-                  onClick={() => setOrderPrice(orderPrice - product.price)}
+                  onClick={() => decrementProductQuantity(product.id)}
                 >
                   -
                 </button>
@@ -145,7 +234,6 @@ export default function NewOrderPage() {
         <div className="flex flex-col">
           <label
             className="text-lg font-bold"
-            onClick={() => setOrderPrice(100)}
           >
             Preço total:
           </label>
@@ -153,8 +241,9 @@ export default function NewOrderPage() {
           <input
             type="number"
             className="input input-primary w-96"
-            value={orderPrice}
+            defaultValue={orderPrice}
             readOnly
+            id="total_price"
           />
         </div>
 
