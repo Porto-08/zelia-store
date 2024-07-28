@@ -4,12 +4,13 @@ import { useEffect, useState } from "react";
 import { Product } from "../types";
 import { deleteProduct, getProduct } from "../../../../api/modules/products";
 import { SubmitHandler, useForm } from "react-hook-form";
-import { Category } from "@/app/categories/types";
+import { Category } from "../../category/types";
 import { getCategories } from "../../../../api/modules/categories";
 import { updateProduct } from "../../../../api/modules/products";
 import Link from "next/link";
 import { toast } from "react-toastify";
 import { useRouter } from "next/navigation";
+import formatPrice from "@/app/utils/formatPrice";
 
 type PageParams = {
   params: {
@@ -19,7 +20,7 @@ type PageParams = {
 
 type ProductForm = {
   name: string;
-  price: number;
+  price: string;
   quantity: number;
   category_id: number;
 };
@@ -62,7 +63,11 @@ export default function ProductPage({ params }: PageParams) {
 
   const onSubmit: SubmitHandler<ProductForm> = async (data) => {
     try {
-      await updateProduct(Number(params.id), data);
+      const formatedData = {
+        ...data,
+        price: formatPrice(data.price),
+      };
+      await updateProduct(Number(params.id), formatedData);
       toast.success("Produto atualizado com sucesso!");
 
       router.push("/products");
@@ -121,7 +126,7 @@ export default function ProductPage({ params }: PageParams) {
                   Preço
                 </label>
                 <input
-                  type="number"
+                  type="string"
                   id="price"
                   className="input input-primary"
                   defaultValue={product.price}

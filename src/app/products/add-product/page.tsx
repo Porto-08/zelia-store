@@ -7,10 +7,12 @@ import { getCategories } from "../../../../api/modules/categories";
 import { createProduct } from "../../../../api/modules/products";
 import { toast } from "react-toastify";
 import Link from "next/link";
+import useFormatPrice from "@/app/utils/formatPrice";
+import formatPrice from "@/app/utils/formatPrice";
 
 type ProductForm = {
   name: string;
-  price: number;
+  price: string;
   quantity: number;
   category_id: number;
 };
@@ -41,13 +43,17 @@ export default function AddProductPage() {
 
   const onSubmit: SubmitHandler<ProductForm> = async (data) => {
     try {
-      await createProduct(data);
+      const formatedData = {
+        ...data,
+        price: formatPrice(data.price),
+      };
+
+      await createProduct(formatedData);
       toast.success("Produto criado com sucesso!");
+      router.push("/products");
     } catch (error) {
       console.error(error);
       toast.error("Ocorreu um erro ao criar o produto.");
-    } finally {
-      router.push("/products");
     }
   };
 
@@ -83,7 +89,7 @@ export default function AddProductPage() {
               Preço
             </label>
             <input
-              type="number"
+              type="text"
               id="price"
               className="input input-primary"
               {...register("price", { required: true })}
@@ -117,6 +123,7 @@ export default function AddProductPage() {
               className="select select-primary w-full max-w-xs"
               {...register("category_id", { required: true })}
             >
+              <option value="">Selecione uma categoria</option>
               {categories.map((category) => (
                 <option key={category.id} value={category.id}>
                   {category.name}

@@ -8,3 +8,10 @@ export type Product = {
   updated_at: string;
   deleted_at: string;
 }
+
+export type ProductDTO = {
+  category_id?: number;
+  name?: string;
+  price?: number;
+  quantity?: number;
+}
