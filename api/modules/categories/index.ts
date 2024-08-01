@@ -1,4 +1,4 @@
-import { Category, CategoryDTO } from "@/app/categories/types";
+import { Category, CategoryDTO } from "../../../src/app/category/types";
 import supabase from "../../supabase";
 
 export async function getCategories(): Promise<Category[] | null> {
