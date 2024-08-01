@@ -68,8 +68,8 @@ export default function AddProductPage() {
         className="mt-5 flex flex-col justify-center"
         onSubmit={handleSubmit(onSubmit)}
       >
-        <div className="flex items-center gap-10">
-          <div>
+        <div className="flex flex-wrap items-center gap-10">
+          <div className="flex flex-col w-full md:w-96">
             <label htmlFor="name" className="block text-lg font-bold">
               Nome
             </label>
@@ -84,7 +84,7 @@ export default function AddProductPage() {
             )}
           </div>
 
-          <div>
+          <div className="flex flex-col w-full md:w-96">
             <label htmlFor="price" className="block text-lg font-bold">
               Preço
             </label>
@@ -99,7 +99,7 @@ export default function AddProductPage() {
             )}
           </div>
 
-          <div>
+          <div className="flex flex-col w-full md:w-96">
             <label htmlFor="quantity" className="block text-lg font-bold">
               Estoque
             </label>
@@ -114,13 +114,13 @@ export default function AddProductPage() {
             )}
           </div>
 
-          <div>
+          <div className="flex flex-col w-full md:w-96">
             <label htmlFor="categories" className="block text-lg font-bold">
               Categoria
             </label>
             <select
               id="categories"
-              className="select select-primary w-full max-w-xs"
+              className="select select-primary"
               {...register("category_id", { required: true })}
             >
               <option value="">Selecione uma categoria</option>

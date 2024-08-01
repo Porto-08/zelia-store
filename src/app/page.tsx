@@ -44,7 +44,7 @@ export default function Home() {
 
   return (
     <main className="px-6 m-auto max-w-7xl">
-      <div className="flex justify-between items-center mt-8">
+      <div className="flex flex-wrap gap-5 justify-between items-center mt-8">
         <div>
           <h1 className="text-4xl font-bold">
             <span className="text-primary">Pedidos</span>
@@ -58,7 +58,7 @@ export default function Home() {
 
         <Link
           href="/orders/new-order"
-          className="btn btn-primary text-gray-300"
+          className="btn btn-primary text-xl text-gray-300"
         >
           Novo pedido
         </Link>

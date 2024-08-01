@@ -193,11 +193,11 @@ export default function NewOrderPage() {
         <span>Preencha os campos abaixo para criar uma novo pedido</span>
       </div>
 
-      <div className="grid grid-cols-3 gap-10 mt-10">
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-10 mt-10">
         {loading && <LoadingContent />}
 
         {products && products.map((product) => (
-          <div key={product.id} className="card bg-base-100 w-96 shadow-xl">
+          <div key={product.id} className="card bg-base-100 w-full shadow-xl">
             <div className="card-body">
               <div>
                 <h2 className="card-title">
@@ -248,8 +248,8 @@ export default function NewOrderPage() {
         className="mt-5 flex flex-col items-start gap-10"
         onSubmit={handleSubmit(onSubmit)}
       >
-        <div className="flex gap-10">
-          <div className="flex flex-col">
+        <div className="flex flex-wrap gap-10">
+          <div className="flex flex-col w-full md:w-96">
             <label
               htmlFor="payment_type_id"
               className="block text-lg font-bold"
@@ -257,7 +257,7 @@ export default function NewOrderPage() {
               Forma de pagamento
             </label>
             <select
-              className="input input-primary w-96"
+              className="input input-primary"
               id="payment_type_id"
               {...register("payment_type_id", { required: true })}
             >
@@ -272,35 +272,35 @@ export default function NewOrderPage() {
               <span className="text-red-500">Campo obrigatório</span>
             )}
           </div>
-          <div className="flex flex-col">
+          <div className="flex flex-col w-full md:w-96">
             <label htmlFor="customer_name" className="block text-lg font-bold">
               Nome do cliente
             </label>
             <input
-              className="input input-primary w-96"
+              className="input input-primary"
               id="customer_name"
               {...register("customer_name")}
             />
           </div>
 
-          <div className="flex flex-col">
+          <div className="flex flex-col w-full md:w-96">
             <label htmlFor="customer_phone" className="block text-lg font-bold">
               Telefone do cliente
             </label>
             <input
-              className="input input-primary w-96"
+              className="input input-primary "
               id="customer_phone"
               {...register("customer_phone")}
             />
           </div>
         </div>
 
-        <div className="flex flex-col w-full">
+        <div className="flex flex-col w-full md:w-96">
           <label className="text-lg font-bold">Preço total:</label>
 
           <input
             type="number"
-            className="input input-primary text-xl"
+            className="input input-primary text-xl "
             value={orderPrice}
             readOnly
             id="total_price"
