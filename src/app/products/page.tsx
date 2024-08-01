@@ -1,24 +1,10 @@
-'use client';
-
 import ProductsList from "@/components/molecules/Products/ProductsList";
 import { getProducts } from "../../../api/modules/products";
 import Link from "next/link";
-import { useEffect, useState } from "react";
-import { Product } from "./types";
 
-export default function ProductsPage() {
-  const [products, setProducts] = useState<Product[]>([]);
-
-  useEffect(() => {
-    async function fetchProducts() {
-      const products = await getProducts();
-      setProducts(products);
-    }
-
-    fetchProducts();
-  }, []);
-
-
+export default async function ProductsPage() {
+  const products = await getProducts();
+  
   return (
     <main className="px-6 m-auto max-w-7xl">
       <div className="flex item-center justify-between">
@@ -41,3 +27,5 @@ export default function ProductsPage() {
     </main>
   );
 }
+
+export const revalidate = 10;

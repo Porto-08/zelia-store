@@ -4,7 +4,7 @@ import supabase from "../../supabase";
 
 export async function getProducts(): Promise<Product[]> {
   try {
-    const { data, error } = await supabase.from("products").select().order('name', { ascending: true });
+    const { data, error } = await supabase.from("products").select().order('quantity', { ascending: false });
 
     if (error) {
       console.error(error);

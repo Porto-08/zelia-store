@@ -9,6 +9,7 @@ import { Product } from "@/app/products/types";
 import { getProducts, updateProduct } from "../../../../api/modules/products";
 import { createOrder, createOrderItem } from "../../../../api/modules/orders";
 import { toast } from "react-toastify";
+import LoadingContent from "@/components/atom/LoadingContent";
 
 export default function NewOrderPage() {
   const {
@@ -21,9 +22,12 @@ export default function NewOrderPage() {
   const [orderPrice, setOrderPrice] = useState(0);
 
   const [orderItems, setOrderItems] = useState<OrderItemsForm[]>([]);
+  const [loading, setLoading] = useState(true);
 
   const incrementOrderPrice = (price: number) => {
-    setOrderPrice(orderPrice + price);
+    const newOrderPrice = orderPrice + price;
+
+    setOrderPrice(newOrderPrice);
   };
 
   const decrementOrderPrice = (price: number) => {
@@ -119,6 +123,8 @@ export default function NewOrderPage() {
   useEffect(() => {
     fetchPaymentTypes();
     fetchProduts();
+
+    setLoading(false);
   }, []);
 
   async function onSubmit(data: OrderItemsForm) {
@@ -173,7 +179,7 @@ export default function NewOrderPage() {
 
       toast.success("Venda criada com sucesso");
 
-      // router.push("/");
+      router.push("/");
     } catch (error) {
       console.error(error);
       toast.error("Erro ao criar venda");
@@ -188,7 +194,9 @@ export default function NewOrderPage() {
       </div>
 
       <div className="grid grid-cols-3 gap-10 mt-10">
-        {products.map((product) => (
+        {loading && <LoadingContent />}
+
+        {products && products.map((product) => (
           <div key={product.id} className="card bg-base-100 w-96 shadow-xl">
             <div className="card-body">
               <div>
@@ -293,7 +301,7 @@ export default function NewOrderPage() {
           <input
             type="number"
             className="input input-primary text-xl"
-            defaultValue={orderPrice}
+            value={orderPrice}
             readOnly
             id="total_price"
           />
@@ -306,7 +314,7 @@ export default function NewOrderPage() {
 
           <button
             type="button"
-            onClick={() => router.push("/orders")}
+            onClick={() => router.push("/")}
             className="btn btn-secondary text-gray-300 w-36"
           >
             Voltar

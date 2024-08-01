@@ -1,27 +1,31 @@
+import { PaymentType } from "@/types";
+import { Product } from "../products/types";
+
+export enum OrderStatus {
+  RETIRAR = 'RETIRAR',
+  RETIRADO = 'RETIRARDO',
+}
+
 export type Order = {
   id: number;
-  product_id: number;
-  payment_type_id: number;
-  customer_name: string;
-  customer_phone: string;
-  withdrawal: boolean;
-  value: number;
-  created_at: string;
-  updated_at: string;
-  deleted_at: string;
-  products: {
-    name: string;
-  },
-  payment_types: {
-    name: string;
-  }
-};
-
-export type OrderDTO = {
   payment_type_id: number;
   customer_name: string;
   customer_phone: string;
   total_price: number;
+  status: OrderStatus;
+  created_at: string;
+  updated_at: string;
+  deleted_at: string;
+  orders_items: OrderItems[];
+  payment_types: PaymentType;
+};
+
+export type OrderDTO = {
+  payment_type_id?: number;
+  customer_name?: string;
+  customer_phone?: string;
+  total_price?: number;
+  status?: OrderStatus;
 }
 
 export type OrderItemsDTO = {
@@ -40,6 +44,7 @@ export type OrderItems = {
   created_at: string;
   updated_at: string;
   deleted_at: string;
+  products: Product;
 }
 
 export type OrderItemsForm = {

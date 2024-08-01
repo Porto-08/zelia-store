@@ -1,4 +1,4 @@
-import { Order, OrderDTO, OrderItemsDTO } from "@/app/orders/type";
+import { Order, OrderDTO, OrderItems, OrderItemsDTO } from "@/app/orders/type";
 import supabase from "../../supabase";
 
 export async function getOrders(): Promise<Order[]> {
@@ -7,12 +7,10 @@ export async function getOrders(): Promise<Order[]> {
       .from("orders")
       .select(`
         *,
-        payment_types (
-          name
+        orders_items(*,
+          products(*)
         ),
-        products (
-          name
-        )
+        payment_types(*)
       `)
 
     if (error) {
@@ -54,6 +52,21 @@ export async function createOrder(orderDTO: OrderDTO): Promise<Order> {
 export async function createOrderItem(orderItemsDTO: OrderItemsDTO) {
   try {
     const { data, error } = await supabase.from("orders_items").insert(orderItemsDTO);
+
+    if (error) {
+      throw error;
+    }
+
+    return data;
+  } catch (error) {
+    console.error(error);
+    throw error;
+  }
+}
+
+export async function updateOrder(id: number, orderDTO: OrderDTO) {
+  try {
+    const { data, error } = await supabase.from("orders").update(orderDTO).match({ id });
 
     if (error) {
       throw error;

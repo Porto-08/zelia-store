@@ -26,7 +26,7 @@ export default function RootLayout({
         <ToastContainer />
         <Header />
 
-        <div className="bg-neutral py-10" style={{ height: "100vh" }}>
+        <div className="bg-neutral py-10" style={{ height: "100%", minHeight: "100vh" }}>
           {children}
         </div>
       </body>
