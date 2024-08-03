@@ -4,6 +4,8 @@ import "./globals.css";
 import Header from "../components/molecules/Header";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import "react-datepicker/dist/react-datepicker.css";
+
 
 const poppins = Poppins({
   weight: ["300", "400", "500", "600", "700"],

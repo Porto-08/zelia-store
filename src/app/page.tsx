@@ -8,6 +8,7 @@ import Link from "next/link";
 import { toast } from "react-toastify";
 import { PacmanLoader } from "react-spinners";
 import LoadingContent from "@/components/atom/LoadingContent";
+import { changeOrderStatusHandler } from "./utils/changeOrderStatusHandler";
 
 export default function Home() {
   const [orders, setOrders] = useState<Order[]>([]);
@@ -15,7 +16,7 @@ export default function Home() {
 
   const fetchOrders = async () => {
     try {
-      const response = await getOrders();
+      const response = await getOrders(30);
       setOrders(response);
     } catch (error) {
       console.error(error);
@@ -29,30 +30,33 @@ export default function Home() {
     fetchOrders();
   }, []);
 
-  const changeOrderStatusHandler = async (orderId: number) => {
-    try {
-      await updateOrder(orderId, { status: OrderStatus.RETIRADO });
+  const changeOrderStatus = async (orderId: number) => {
+    changeOrderStatusHandler(orderId);
 
-      fetchOrders();
+    const updatedOrders = orders.map((order) => {
+      if (order.id === orderId) {
+        return { ...order, status: OrderStatus.RETIRADO };
+      }
 
-      toast.success("Pedido marcado como retirado");
-    } catch (error) {
-      console.error(error);
-      toast.error("Erro ao marcar pedido como retirado");
-    }
-  }
+      return order;
+    });
+
+    setOrders(updatedOrders);
+  };
 
   return (
     <main className="px-6 m-auto max-w-7xl">
       <div className="flex flex-wrap gap-5 justify-between items-center mt-8">
         <div>
           <h1 className="text-4xl font-bold">
-            <span className="text-primary">Pedidos</span>
+            <span className="text-primary">Ultimos pedidos</span>
           </h1>
 
           <p className="text-gray-300">
-            Aqui você pode visualizar os pedidos realizados e marcar como
-            retirado quando o cliente retirar o pedido.
+            Aqui você pode visualizar os utlimos 30 pedidos realizados. {""}
+            <Link href="/orders" className="text-primary underline">
+              Ver mais.
+            </Link>
           </p>
         </div>
 
@@ -112,7 +116,7 @@ export default function Home() {
                   <button
                     className="mt-4 btn btn-success text-white font-bold py-2 px-4 rounded"
                     type="button"
-                    onClick={() => changeOrderStatusHandler(order.id)}
+                    onClick={() => changeOrderStatus(order.id)}
                   >
                     Marcar como retirado
                   </button>

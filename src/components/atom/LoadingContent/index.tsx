@@ -6,7 +6,7 @@ export default function LoadingContent() {
       <ClipLoader
         color="#fff"
         size={100}
-        speedMultiplier={4}
+        speedMultiplier={2}
       />
     </div>
   )
