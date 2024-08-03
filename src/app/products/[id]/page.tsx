@@ -90,11 +90,11 @@ export default function ProductPage({ params }: PageParams) {
   };
 
   return (
-    <main className="px-6 m-auto max-w-7xl">
+    <main className="py-4 pb-20 px-6 m-auto max-w-7xl">
       {product && (
         <>
           <div>
-            <h1 className="text-5xl font-bold">
+            <h1 className="text-4xl text-primary font-bold">
               Editando Produto - {product.name}
             </h1>
           </div>

@@ -9,7 +9,9 @@ export default async function ProductsPage() {
     <main className="px-6 m-auto max-w-7xl">
       <div className="flex flex-wrap gap-5 item-center justify-between">
         <div>
-          <h1 className="text-5xl font-bold">Produtos</h1>
+          <h1 className="text-4xl font-bold">
+            <span className="text-primary">Produtos</span>
+          </h1>
           <span>Aqui você encontra todos os produtos disponíveis.</span>
         </div>
 

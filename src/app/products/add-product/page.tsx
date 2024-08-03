@@ -58,9 +58,9 @@ export default function AddProductPage() {
   };
 
   return (
-    <main className="px-6 m-auto max-w-7xl">
+    <main className="py-4 px-6 m-auto max-w-7xl">
       <div>
-        <h1 className="text-5xl font-bold">Criar Produto</h1>
+        <h1 className="text-4xl text-primary font-bold">Criar Produto</h1>
         <span>Preencha os campos abaixo para criar um novo produto</span>
       </div>
 
