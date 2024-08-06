@@ -10,7 +10,7 @@ import { updateProduct } from "../../../../api/modules/products";
 import Link from "next/link";
 import { toast } from "react-toastify";
 import { useRouter } from "next/navigation";
-import formatPrice from "@/app/utils/formatPrice";
+import formatPrice from "../../../utils/formatPrice";
 
 type PageParams = {
   params: {

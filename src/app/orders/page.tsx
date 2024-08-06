@@ -12,8 +12,8 @@ import "./page.css";
 import { useForm } from "react-hook-form";
 import DatePicker from "react-datepicker";
 import { registerLocale } from  "react-datepicker";
+import { changeOrderStatusHandler } from "../../utils/changeOrderStatusHandler";
 import { ptBR } from 'date-fns/locale';
-import { changeOrderStatusHandler } from "../utils/changeOrderStatusHandler";
 registerLocale('ptBr', ptBR);
 
 

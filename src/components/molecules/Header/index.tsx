@@ -2,6 +2,7 @@
 import Link from "next/link";
 import { FaBoxOpen, FaStore } from "react-icons/fa";
 import { IoFastFood } from "react-icons/io5";
+import { BsClipboardDataFill } from "react-icons/bs";
 import './component.css';
 
 export default function Header() {
@@ -20,6 +21,9 @@ export default function Header() {
             </li>
             <li className="text-xl">
               <Link href="/products">Produtos</Link>
+            </li>
+            <li className="text-xl">
+              <Link href="/reports">Relatórios</Link>
             </li>
           </ul>
         </div>
@@ -40,6 +44,11 @@ export default function Header() {
           <li>
             <Link href="/products" className="btn btn-ghost text-3xl font-bold">
               <IoFastFood />
+            </Link>
+          </li>
+          <li>
+            <Link href="/reports" className="btn btn-ghost text-3xl font-bold">
+              <BsClipboardDataFill />
             </Link>
           </li>
         </ul>

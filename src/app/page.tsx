@@ -8,7 +8,7 @@ import Link from "next/link";
 import { toast } from "react-toastify";
 import { PacmanLoader } from "react-spinners";
 import LoadingContent from "@/components/atom/LoadingContent";
-import { changeOrderStatusHandler } from "./utils/changeOrderStatusHandler";
+import { changeOrderStatusHandler } from "../utils/changeOrderStatusHandler";
 
 export default function Home() {
   const [orders, setOrders] = useState<Order[]>([]);

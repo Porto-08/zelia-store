@@ -1,6 +1,6 @@
 import { toast } from "react-toastify";
-import { updateOrder } from "../../../api/modules/orders";
-import { OrderStatus } from "../orders/type";
+import { updateOrder } from "../../api/modules/orders";
+import { OrderStatus } from "../app/orders/type";
 
 export const changeOrderStatusHandler = async (orderId: number) => {
   try {

@@ -1,5 +1,8 @@
 import { Order, OrderDTO, OrderItems, OrderItemsDTO } from "@/app/orders/type";
 import supabase from "../../supabase";
+import { ReportGenericData } from "@/app/reports/types";
+import moment from "moment";
+
 
 export async function getOrders(limit: number = 100): Promise<Order[]> {
   try {
@@ -122,6 +125,37 @@ export async function getOrdersByFilter(filter: OrdersByFilterParams): Promise<O
     }
 
     return data;
+  } catch (error) {
+    console.error(error);
+    throw error;
+  }
+}
+
+export async function getSalesByMonth(): Promise<any> {
+  try {
+    const { data, error } = await supabase.from("orders").select('*');
+
+    if (error) {
+      throw error;
+    }
+
+    const salesByMonth = data.reduce((acc: any, order: Order) => {
+      const date = moment(order.created_at).locale("pt-br").format("MM/YYYY");
+      if (!acc[date]) {
+        acc[date] = 0;
+      }
+
+      acc[date] += order.total_price
+
+      return acc;
+    }, {});
+
+
+
+    return Object.keys(salesByMonth).map((key) => ({
+      label: key,
+      value: salesByMonth[key]
+    }));
   } catch (error) {
     console.error(error);
     throw error;

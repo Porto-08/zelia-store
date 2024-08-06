@@ -7,8 +7,7 @@ import { getCategories } from "../../../../api/modules/categories";
 import { createProduct } from "../../../../api/modules/products";
 import { toast } from "react-toastify";
 import Link from "next/link";
-import useFormatPrice from "@/app/utils/formatPrice";
-import formatPrice from "@/app/utils/formatPrice";
+import formatPrice from "../../../utils/formatPrice";
 
 type ProductForm = {
   name: string;
