@@ -1,58 +1,61 @@
 "use client";
 import Link from "next/link";
-import { FaBoxOpen, FaStore } from "react-icons/fa";
-import { IoFastFood } from "react-icons/io5";
-import { BsClipboardDataFill } from "react-icons/bs";
-import './component.css';
+import { CgMenuHotdog } from "react-icons/cg";
+import "./component.css";
 
 export default function Header() {
   return (
-    <header className="fixed bottom-0 z-50 md:static">
-      <div className="default-menu navbar justify-between bg-base-300 py-3 px-6">
-        <div className="flex-1">
-          <Link href="/" className="btn btn-ghost text-3xl font-bold">
-            Loja da Zélia
-          </Link>
-        </div>
-        <div className="flex-none">
-          <ul className="menu menu-horizontal px-1">
-            <li className="text-xl">
-              <Link href="/orders">Pedidos</Link>
-            </li>
-            <li className="text-xl">
-              <Link href="/products">Produtos</Link>
-            </li>
-            <li className="text-xl">
-              <Link href="/reports">Relatórios</Link>
-            </li>
-          </ul>
+    <div className="sticky top-0 drawer z-50 md:static">
+      <input id="my-drawer-3" type="checkbox" className="drawer-toggle" />
+      <div className="drawer-content flex flex-col">
+        <div className="navbar bg-base-300 w-full">
+          <div className="flex-none lg:hidden">
+            <label
+              htmlFor="my-drawer-3"
+              aria-label="open sidebar"
+              className="btn btn-square btn-ghost"
+            >
+              <CgMenuHotdog className="text-3xl" />
+            </label>
+          </div>
+          <div className="mx-2 flex-1 px-2">
+            <Link href="/" className="btn btn-ghost text-3xl font-bold">
+              Loja da Zélia
+            </Link>
+          </div>
+          <div className="hidden flex-none lg:block ">
+            <ul className="menu menu-horizontal">
+              <li className="text-xl">
+                <Link href="/orders">Pedidos</Link>
+              </li>
+              <li className="text-xl">
+                <Link href="/products">Produtos</Link>
+              </li>
+              <li className="text-xl">
+                <Link href="/reports">Relatórios</Link>
+              </li>
+            </ul>
+          </div>
         </div>
       </div>
-
-      <div className="mobile-menu navbar bg-base-300 py-3 px-6 w-svw">
-        <ul className="flex justify-around w-full">
-          <li>
-            <Link href="/" className="btn btn-ghost text-3xl font-bold">
-              <FaStore />
-            </Link>
+      <div className="drawer-side">
+        <label
+          htmlFor="my-drawer-3"
+          aria-label="close sidebar"
+          className="drawer-overlay"
+        ></label>
+        <ul className="menu bg-base-200 min-h-full w-80 p-4">
+          <li className="text-xl">
+            <Link href="/orders">Pedidos</Link>
           </li>
-          <li>
-            <Link href="/orders" className="btn btn-ghost text-3xl font-bold">
-              <FaBoxOpen />
-            </Link>
+          <li className="text-xl">
+            <Link href="/products">Produtos</Link>
           </li>
-          <li>
-            <Link href="/products" className="btn btn-ghost text-3xl font-bold">
-              <IoFastFood />
-            </Link>
-          </li>
-          <li>
-            <Link href="/reports" className="btn btn-ghost text-3xl font-bold">
-              <BsClipboardDataFill />
-            </Link>
+          <li className="text-xl">
+            <Link href="/reports">Relatórios</Link>
           </li>
         </ul>
       </div>
-    </header>
+    </div>
   );
 }
