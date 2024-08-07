@@ -10,6 +10,7 @@ type BarGraphicProps = {
   data: ReportGenericData[];
   label: string;
   graphTitle: string;
+  graphColor?: string;
 };
 
 
@@ -17,12 +18,11 @@ export default function BarGraphic({
   data,
   label,
   graphTitle,
+  graphColor,
 }: BarGraphicProps) {
-  
-
   return (
     <div className="flex flex-col gap-5">
-      <h2 className="text-2xl text-secondary font-bold">{graphTitle}</h2>
+      <h2 className="text-2xl text-white font-bold">{graphTitle}</h2>
       <Bar
         data={{
           labels: data.map((item) => item.label),
@@ -30,18 +30,18 @@ export default function BarGraphic({
             {
               label,
               data: data.map((item) => item.value),
-              backgroundColor: "#5856d6",
-              borderColor: "#5856d6",
+              backgroundColor: graphColor || "#5856d6",
+              borderColor: graphColor || "#5856d6",
               borderWidth: 1,
             },
           ],
         }}
         options={{
-          color: "#000",
+          color: "#fff",
           plugins: {
             legend: {
               labels: {
-                color: "#000",
+                color: "#fff",
               },       
               position: "bottom",
             },
@@ -69,7 +69,7 @@ export default function BarGraphic({
             },
             x: {
               ticks: {
-                  color: "#000",
+                  color: "#fff",
               },
               grid: {
                 display: false,
