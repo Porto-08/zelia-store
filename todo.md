@@ -1,0 +1,5 @@
+- Limpar dados do banco - OK
+- Forma de pagamento opcional
+- Ordernar por pedidos a retirar
+- Página de editar pedidos
+- Verificar bug de duplicação de clientes

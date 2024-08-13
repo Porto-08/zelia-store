@@ -44,6 +44,14 @@ export default function Home() {
     setOrders(updatedOrders);
   };
 
+  if (loading) {
+    return (
+      <main className="flex justify-center items-center h-screen">
+        <LoadingContent />
+      </main>
+    );
+  }
+
   return (
     <main className="px-6 m-auto max-w-7xl">
       <div className="flex flex-wrap gap-5 justify-between items-center mt-8">
@@ -68,8 +76,6 @@ export default function Home() {
         </Link>
       </div>
 
-      {loading && <LoadingContent />}
-
       {orders.length > 0 && (
         <div className="mt-8">
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 mt-4">
@@ -78,13 +84,13 @@ export default function Home() {
                 key={order.id}
                 className="bg-base-300 p-4 rounded-md shadow-md"
               >
-                <h3 className="text-xl font-bold">{order.customer_name}</h3>
+                <h3 className="text-xl font-bold">{order.customer_name || "Nome não Informado"}</h3>
                 <p className="text-gray-300">
-                  Celular: <strong>{order.customer_phone}</strong>
+                  Celular: <strong>{order.customer_phone || "Não Informado"}</strong>
                 </p>
                 <p className="text-gray-300">
                   Forma de pagamento:{" "}
-                  <strong>{order.payment_types.name}</strong>
+                  <strong>{order.payment_types?.name || "N/A"}</strong>
                 </p>
                 <p className="text-gray-300">
                   Valor: <strong>R$ {order.total_price}</strong>

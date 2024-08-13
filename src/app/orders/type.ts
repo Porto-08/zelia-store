@@ -51,7 +51,7 @@ export type OrderItemsForm = {
   product_id: number;
   quantity: number;
   price: number;
-  payment_type_id: number;
+  payment_type_id?: number;
   customer_name?: string;
   customer_phone?: string;
   total_price?: number;

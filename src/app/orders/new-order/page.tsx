@@ -140,7 +140,7 @@ export default function NewOrderPage() {
 
     try {
       const order = await createOrder({
-        payment_type_id: data.payment_type_id,
+        payment_type_id: data.payment_type_id || undefined,
         customer_name: data.customer_name || "",
         customer_phone: data.customer_phone || "",
         total_price: orderPrice,
@@ -186,6 +186,14 @@ export default function NewOrderPage() {
     }
   }
 
+  if (loading) {
+    return (
+      <main className="px-6 m-auto max-w-7xl">
+        <LoadingContent />
+      </main>
+    );
+  }
+
   return (
     <main className="px-6 m-auto max-w-7xl">
       <div>
@@ -194,8 +202,6 @@ export default function NewOrderPage() {
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-10 mt-10">
-        {loading && <LoadingContent />}
-
         {products && products.map((product) => (
           <div key={product.id} className="card bg-base-100 w-full shadow-xl">
             <div className="card-body">
@@ -259,7 +265,7 @@ export default function NewOrderPage() {
             <select
               className="input input-primary"
               id="payment_type_id"
-              {...register("payment_type_id", { required: true })}
+              {...register("payment_type_id")}
             >
               <option value="">Selecione uma forma de pagamento</option>
               {paymentTypes.map((paymentType) => (
@@ -268,9 +274,6 @@ export default function NewOrderPage() {
                 </option>
               ))}
             </select>
-            {errors.payment_type_id && (
-              <span className="text-red-500">Campo obrigatório</span>
-            )}
           </div>
           <div className="flex flex-col w-full md:w-96">
             <label htmlFor="customer_name" className="block text-lg font-bold">
