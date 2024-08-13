@@ -3,12 +3,12 @@ import { Product } from "../products/types";
 
 export enum OrderStatus {
   RETIRAR = 'RETIRAR',
-  RETIRADO = 'RETIRARDO',
+  RETIRADO = 'RETIRADO',
 }
 
 export type Order = {
   id: number;
-  payment_type_id: number;
+  payment_type_id?: number;
   customer_name: string;
   customer_phone: string;
   total_price: number;

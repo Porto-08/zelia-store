@@ -1,4 +1,4 @@
-'use client';
+"use client";
 import { Order, OrderStatus } from "./orders/type";
 import { useEffect, useState } from "react";
 import { getOrders, updateOrder } from "../../api/modules/orders";
@@ -9,6 +9,7 @@ import { toast } from "react-toastify";
 import { PacmanLoader } from "react-spinners";
 import LoadingContent from "@/components/atom/LoadingContent";
 import { changeOrderStatusHandler } from "../utils/changeOrderStatusHandler";
+import { OrderCard } from "@/components/molecules/Orders/OrderCard";
 
 export default function Home() {
   const [orders, setOrders] = useState<Order[]>([]);
@@ -24,7 +25,7 @@ export default function Home() {
     } finally {
       setLoading(false);
     }
-  }
+  };
 
   useEffect(() => {
     fetchOrders();
@@ -45,11 +46,7 @@ export default function Home() {
   };
 
   if (loading) {
-    return (
-      <main className="flex justify-center items-center h-screen">
-        <LoadingContent />
-      </main>
-    );
+    return <LoadingContent />;
   }
 
   return (
@@ -80,54 +77,17 @@ export default function Home() {
         <div className="mt-8">
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 mt-4">
             {orders.map((order) => (
-              <div
+              <OrderCard
                 key={order.id}
-                className="bg-base-300 p-4 rounded-md shadow-md"
-              >
-                <h3 className="text-xl font-bold">{order.customer_name || "Nome não Informado"}</h3>
-                <p className="text-gray-300">
-                  Celular: <strong>{order.customer_phone || "Não Informado"}</strong>
-                </p>
-                <p className="text-gray-300">
-                  Forma de pagamento:{" "}
-                  <strong>{order.payment_types?.name || "N/A"}</strong>
-                </p>
-                <p className="text-gray-300">
-                  Valor: <strong>R$ {order.total_price}</strong>
-                </p>
-                <p className="text-gray-300">
-                  Data:{" "}
-                  <strong>
-                    {moment(order.created_at).locale("pt-br").calendar()}
-                  </strong>
-                </p>
-
-                <h4 className="text-lg font-bold mt-4">Produtos</h4>
-                <ul>
-                  {order.orders_items.map((orderItem) => (
-                    <li key={orderItem.id}>
-                      {orderItem.products.name} - {orderItem.quantity}{" "}
-                      unidade(s)
-                    </li>
-                  ))}
-                </ul>
-
-                {order.status === OrderStatus.RETIRADO && (
-                  <p className="text-green-500 font-bold mt-4">
-                    Pedido retirado
-                  </p>
-                )}
-
-                {order.status !== OrderStatus.RETIRADO && (
-                  <button
-                    className="mt-4 btn btn-success text-white font-bold py-2 px-4 rounded"
-                    type="button"
-                    onClick={() => changeOrderStatus(order.id)}
-                  >
-                    Marcar como retirado
-                  </button>
-                )}
-              </div>
+                id={order.id}
+                customer_name={order.customer_name}
+                customer_phone={order.customer_phone}
+                payment_name={order.payment_types?.name}
+                total_price={order.total_price}
+                created_at={order.created_at}
+                orders_items={order.orders_items}
+                status={order.status}
+              />
             ))}
           </div>
         </div>

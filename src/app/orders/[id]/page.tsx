@@ -1,29 +1,37 @@
 "use client";
-import { useForm } from "react-hook-form";
-import { OrderItemsForm } from "../type";
-import { useRouter } from "next/navigation";
-import { PaymentType } from "@/types";
 import { useEffect, useState } from "react";
-import { getPaymentTypes } from "../../../../api/modules/payment-types";
-import { Product } from "@/app/products/types";
-import { getProducts, updateProduct } from "../../../../api/modules/products";
-import { createOrder, createOrderItem } from "../../../../api/modules/orders";
-import { toast } from "react-toastify";
+import Title from "@/components/atom/Title";
+import { Order, OrderItemsForm } from "../type";
 import LoadingContent from "@/components/atom/LoadingContent";
+import { toast } from "react-toastify";
+import { getOrderById } from "../../../../api/modules/orders";
+import { useForm } from "react-hook-form";
+import { getPaymentTypes } from "../../../../api/modules/payment-types";
+import { getProducts } from "../../../../api/modules/products";
+import { PaymentType } from "@/types";
+import { Product } from "@/app/products/types";
+import { useRouter } from "next/navigation";
 
-export default function NewOrderPage() {
+type PageParams = {
+  params: {
+    id: string;
+  };
+};
+
+export default function OrderPage({ params }: PageParams) {
   const router = useRouter();
-  const {
-    register,
-    handleSubmit,
-    formState: { errors },
-  } = useForm<OrderItemsForm>();
+  const [loading, setLoading] = useState(true);
+  const [order, setOrder] = useState<Order | null>(null);
   const [paymentTypes, setPaymentTypes] = useState<PaymentType[]>([]);
   const [products, setProducts] = useState<Product[]>([]);
   const [orderPrice, setOrderPrice] = useState(0);
-
   const [orderItems, setOrderItems] = useState<OrderItemsForm[]>([]);
-  const [loading, setLoading] = useState(true);
+  const {
+    register,
+    handleSubmit,
+    reset,
+    formState: { errors },
+  } = useForm<OrderItemsForm>();
 
   const incrementOrderPrice = (price: number) => {
     const newOrderPrice = orderPrice + price;
@@ -99,7 +107,6 @@ export default function NewOrderPage() {
     decrementOrderPrice(product.price);
   };
 
-
   async function fetchPaymentTypes() {
     const paymentTypesData = await getPaymentTypes();
 
@@ -120,71 +127,50 @@ export default function NewOrderPage() {
     setProducts(productsData);
   }
 
-  useEffect(() => {
-    fetchPaymentTypes();
-    fetchProduts();
-
-    setLoading(false);
-  }, []);
-
-  async function onSubmit(data: OrderItemsForm) {
-    if (orderItems.length === 0) {
-      toast.error("Selecione ao menos um produto");
-      return;
-    }
-
-    if (orderPrice === 0 || !orderPrice) {
-      toast.error("O preço total não pode ser 0");
-      return;
-    }
-
+  const fetchOrder = async () => {
     try {
-      const order = await createOrder({
-        payment_type_id: data.payment_type_id || undefined,
-        customer_name: data.customer_name || "",
-        customer_phone: data.customer_phone || "",
-        total_price: orderPrice,
-      });
+      const response = await getOrderById(Number(params.id));
+      const orderItemsData = response.orders_items.map((orderItem) => ({
+        product_id: orderItem.product_id,
+        quantity: orderItem.quantity,
+        price: orderItem.price,
+        payment_type_id: response.payment_type_id,
+      }));
 
-      orderItems.forEach(async (orderItem) => {
-        const orderItemData = {
-          order_id: order.id,
-          product_id: orderItem.product_id,
-          quantity: orderItem.quantity,
-          price: orderItem.price * orderItem.quantity,
-        };
-
-        const product = products.find(
-          (product) => product.id === orderItem.product_id
-        );
-
-        if (!product) {
-          return;
-        }
-
-        const newProductQuantity = product.quantity - orderItem.quantity;
-
-        if (newProductQuantity < 0) {
-          toast.error("Quantidade insuficiente em estoque");
-          return;
-        }
-
-        const createOrderItemPromise = createOrderItem(orderItemData);
-        const updateProductPromise = updateProduct(orderItem.product_id, {
-          quantity: newProductQuantity,
-        });
-
-        await Promise.all([createOrderItemPromise, updateProductPromise]);
-      });
-
-      toast.success("Venda criada com sucesso");
-
-      router.push("/");
+      setOrder(response);
+      setOrderPrice(response.total_price);
+      setOrderItems(orderItemsData);
     } catch (error) {
       console.error(error);
-      toast.error("Erro ao criar venda");
+      toast.error("Erro ao buscar o pedido");
+    } finally {
+      setLoading(false);
     }
-  }
+  };
+
+  const onSubmit = async (data: OrderItemsForm) => {
+    console.log(data);
+  };
+
+  useEffect(() => {
+    fetchOrder();
+    fetchProduts();
+    fetchPaymentTypes();
+
+    return () => {
+      setOrder(null);
+      setProducts([]);
+      setPaymentTypes([]);
+    };
+  }, [params.id]);
+
+  useEffect(() => {
+    if (order) {
+      reset({
+        payment_type_id: order?.payment_type_id,
+      });
+    }
+  }, [order]);
 
   if (loading) {
     return <LoadingContent />;
@@ -192,10 +178,7 @@ export default function NewOrderPage() {
 
   return (
     <main className="px-6 m-auto max-w-7xl">
-      <div>
-        <h1 className="text-5xl font-bold">Nova Pedido</h1>
-        <span>Preencha os campos abaixo para criar uma novo pedido</span>
-      </div>
+      <Title title={`Editando Pedido - #${order?.id}`} />
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-10 mt-10">
         {products &&
@@ -279,6 +262,7 @@ export default function NewOrderPage() {
             <input
               className="input input-primary"
               id="customer_name"
+              defaultValue={order?.customer_name}
               {...register("customer_name")}
             />
           </div>
@@ -290,6 +274,7 @@ export default function NewOrderPage() {
             <input
               className="input input-primary "
               id="customer_phone"
+              defaultValue={order?.customer_phone}
               {...register("customer_phone")}
             />
           </div>
@@ -309,7 +294,7 @@ export default function NewOrderPage() {
 
         <div className="flex gap-5">
           <button type="submit" className="btn btn-primary text-gray-300 w-36">
-            Criar venda
+            Salvar
           </button>
 
           <button
@@ -321,6 +306,18 @@ export default function NewOrderPage() {
           </button>
         </div>
       </form>
+
+      <section className="mt-10 bg-base-100 p-5 rounded-lg flex flex-col gap-10 items-start">
+        <div>
+          <h3 className="text-xl font-bold md:text-2xl">Exclusão de pedido</h3>
+          <span>
+            Ao excluir o pedido, você não poderá mais recuperá-lo. Tem certeza
+            que deseja excluir o pedido?
+          </span>
+        </div>
+
+        <button className="btn btn-error text-white">Excluir</button>
+      </section>
     </main>
   );
 }

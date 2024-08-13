@@ -2,7 +2,11 @@
 import LoadingContent from "@/components/atom/LoadingContent";
 import { useEffect, useState } from "react";
 import { Order, OrderStatus } from "./type";
-import { getOrders, getOrdersByFilter, updateOrder } from "../../../api/modules/orders";
+import {
+  getOrders,
+  getOrdersByFilter,
+  updateOrder,
+} from "../../../api/modules/orders";
 import { toast } from "react-toastify";
 import { getProducts } from "../../../api/modules/products";
 import { Product } from "../products/types";
@@ -11,11 +15,11 @@ import "moment/locale/pt-br";
 import "./page.css";
 import { useForm } from "react-hook-form";
 import DatePicker from "react-datepicker";
-import { registerLocale } from  "react-datepicker";
+import { registerLocale } from "react-datepicker";
 import { changeOrderStatusHandler } from "../../utils/changeOrderStatusHandler";
-import { ptBR } from 'date-fns/locale';
-registerLocale('ptBr', ptBR);
-
+import { ptBR } from "date-fns/locale";
+import { OrderCard } from "@/components/molecules/Orders/OrderCard";
+registerLocale("ptBr", ptBR);
 
 type FilterForm = {
   filter_name: string;
@@ -89,16 +93,12 @@ export default function OrdersPage() {
       console.error(error);
       toast.error("Erro ao buscar os pedidos");
     } finally {
-      setLoading(false)
+      setLoading(false);
     }
   }
 
   if (loading) {
-    return (
-      <main className="flex flex-col gap-8 px-6 m-auto max-w-7xl">
-        <LoadingContent />
-      </main>
-    );
+    return <LoadingContent />;
   }
 
   return (
@@ -156,7 +156,6 @@ export default function OrdersPage() {
             onChange={(newDate) => setDate(newDate)}
             dateFormat={"dd/MM/yyyy"}
           />
-        
 
           <button type="submit" className="btn btn-primary text-gray-300 w-40">
             Filtrar
@@ -176,6 +175,19 @@ export default function OrdersPage() {
         <div>
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 mt-4">
             {orders.map((order) => (
+              <OrderCard
+                key={order.id}
+                id={order.id}
+                customer_name={order.customer_name}
+                customer_phone={order.customer_phone}
+                payment_name={order.payment_types?.name}
+                total_price={order.total_price}
+                created_at={order.created_at}
+                orders_items={order.orders_items}
+                status={order.status}
+              />
+            ))}
+            {/* {orders.map((order) => (
               <div
                 key={order.id}
                 className="bg-base-300 p-4 rounded-md shadow-md"
@@ -223,7 +235,7 @@ export default function OrdersPage() {
                   </button>
                 )}
               </div>
-            ))}
+            ))} */}
           </div>
         </div>
       )}

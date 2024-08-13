@@ -2,6 +2,33 @@ import { Order, OrderDTO, OrderItems, OrderItemsDTO } from "@/app/orders/type";
 import supabase from "../../supabase";
 import { ReportGenericData } from "@/app/reports/types";
 import moment from "moment";
+import { sortPerStatusDelivered } from "@/utils/sortPerStatusDelivered";
+
+export async function getOrderById(id: number): Promise<Order> {
+  try {
+    const { data, error } = await supabase
+      .from("orders")
+      .select(
+        `*, 
+        orders_items(*, 
+          products(*)
+        ),
+        payment_types(*)
+      `
+      )
+      .eq("id", id)
+      .limit(1);
+
+    if (error) {
+      throw error;
+    }
+
+    return data[0];
+  } catch (error) {
+    console.error(error);
+    throw error;
+  }
+}
 
 export async function getOrders(limit: number = 100): Promise<Order[]> {
   try {
@@ -23,7 +50,9 @@ export async function getOrders(limit: number = 100): Promise<Order[]> {
       throw error;
     }
 
-    return data;
+    const dataSorted = sortPerStatusDelivered(data);
+
+    return dataSorted;
   } catch (error) {
     console.error(error);
     throw error;
