@@ -1,5 +1,5 @@
 import { OrderStatus } from "@/app/orders/type";
-import { changeOrderStatusHandler } from "@/utils/changeOrderStatusHandler";
+import { useOrders } from "@/context/orders/OrdersContext";
 import moment from "moment";
 import Link from "next/link";
 
@@ -21,6 +21,8 @@ type OrderCardProps = {
 };
 
 export function OrderCard(order: OrderCardProps) {
+  const { changeOrderStatus } = useOrders();
+
   return (
     <div key={order.id} className="bg-base-300 p-4 rounded-md shadow-md">
       <h3 className="text-xl font-bold">
@@ -57,7 +59,7 @@ export function OrderCard(order: OrderCardProps) {
           <button
             className="mt-4 btn btn-success text-white font-bold py-2 px-4"
             type="button"
-            onClick={() => changeOrderStatusHandler(order.id)}
+            onClick={() => changeOrderStatus(order.id)}
           >
             Marcar como retirado
           </button>

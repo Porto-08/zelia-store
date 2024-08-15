@@ -1,51 +1,15 @@
 "use client";
-import { Order, OrderStatus } from "./orders/type";
-import { useEffect, useState } from "react";
-import { getOrders, updateOrder } from "../../api/modules/orders";
-import moment from "moment";
 import "moment/locale/pt-br";
 import Link from "next/link";
-import { toast } from "react-toastify";
-import { PacmanLoader } from "react-spinners";
 import LoadingContent from "@/components/atom/LoadingContent";
 import { changeOrderStatusHandler } from "../utils/changeOrderStatusHandler";
 import { OrderCard } from "@/components/molecules/Orders/OrderCard";
+import { useOrders } from "@/context/orders/OrdersContext";
 
 export default function Home() {
-  const [orders, setOrders] = useState<Order[]>([]);
-  const [loading, setLoading] = useState(true);
+  const { orders, ordersLoading } = useOrders();
 
-  const fetchOrders = async () => {
-    try {
-      const response = await getOrders(30);
-      setOrders(response);
-    } catch (error) {
-      console.error(error);
-      toast.error("Erro ao buscar os pedidos");
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  useEffect(() => {
-    fetchOrders();
-  }, []);
-
-  const changeOrderStatus = async (orderId: number) => {
-    changeOrderStatusHandler(orderId);
-
-    const updatedOrders = orders.map((order) => {
-      if (order.id === orderId) {
-        return { ...order, status: OrderStatus.RETIRADO };
-      }
-
-      return order;
-    });
-
-    setOrders(updatedOrders);
-  };
-
-  if (loading) {
+  if (ordersLoading) {
     return <LoadingContent />;
   }
 
