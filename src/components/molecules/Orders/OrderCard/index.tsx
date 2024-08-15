@@ -49,13 +49,13 @@ export function OrderCard(order: OrderCardProps) {
         ))}
       </ul>
 
-      <div className="flex justify-between items-center">
+      <div className="flex flex-col justify-between">
         {order.status === OrderStatus.RETIRADO && (
           <p className="text-green-500 font-bold mt-4">Pedido retirado</p>
         )}
         {order.status !== OrderStatus.RETIRADO && (
           <button
-            className="mt-4 btn btn-success text-white font-bold py-2 px-4 rounded"
+            className="mt-4 btn btn-success text-white font-bold py-2 px-4"
             type="button"
             onClick={() => changeOrderStatusHandler(order.id)}
           >

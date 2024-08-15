@@ -101,6 +101,21 @@ export async function createOrderItem(orderItemsDTO: OrderItemsDTO) {
   }
 }
 
+export async function deleteOrdersItems(id: number) {
+  try {
+    const { data, error } = await supabase.from("orders_items").delete().eq("order_id", id);
+
+    if (error) {
+      throw error;
+    }
+
+    return data;
+  } catch (error) {
+    console.error(error);
+    throw error;
+  }
+}
+
 export async function updateOrder(id: number, orderDTO: OrderDTO) {
   try {
     const { data, error } = await supabase

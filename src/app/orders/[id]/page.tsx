@@ -4,10 +4,15 @@ import Title from "@/components/atom/Title";
 import { Order, OrderItemsForm } from "../type";
 import LoadingContent from "@/components/atom/LoadingContent";
 import { toast } from "react-toastify";
-import { getOrderById } from "../../../../api/modules/orders";
+import {
+  createOrderItem,
+  deleteOrdersItems,
+  getOrderById,
+  updateOrder,
+} from "../../../../api/modules/orders";
 import { useForm } from "react-hook-form";
 import { getPaymentTypes } from "../../../../api/modules/payment-types";
-import { getProducts } from "../../../../api/modules/products";
+import { getProducts, updateProduct } from "../../../../api/modules/products";
 import { PaymentType } from "@/types";
 import { Product } from "@/app/products/types";
 import { useRouter } from "next/navigation";
@@ -140,6 +145,8 @@ export default function OrderPage({ params }: PageParams) {
       setOrder(response);
       setOrderPrice(response.total_price);
       setOrderItems(orderItemsData);
+
+      localStorage.setItem("orderItems", JSON.stringify(orderItemsData));
     } catch (error) {
       console.error(error);
       toast.error("Erro ao buscar o pedido");
@@ -148,8 +155,99 @@ export default function OrderPage({ params }: PageParams) {
     }
   };
 
+  const getNewProductQuantity = (
+    productQuantity: number,
+    newOrderItemQuantity: number,
+    previousOrderItemQuantity?: number,
+  ) => {
+    let newProductQuantity = productQuantity;
+
+    if (previousOrderItemQuantity) {
+      if (previousOrderItemQuantity > newOrderItemQuantity) {
+        newProductQuantity += (previousOrderItemQuantity - newOrderItemQuantity);
+      } else {
+        newProductQuantity -= (newOrderItemQuantity - previousOrderItemQuantity);
+      }
+    } else {
+      newProductQuantity -= newOrderItemQuantity;
+    }
+
+    return newProductQuantity;
+  };
+
   const onSubmit = async (data: OrderItemsForm) => {
-    console.log(data);
+    if (orderItems.length === 0) {
+      toast.error("Selecione ao menos um produto");
+      return;
+    }
+
+    if (orderPrice === 0 || !orderPrice) {
+      toast.error("O preço total não pode ser 0");
+      return;
+    }
+
+    try {
+      await updateOrder(Number(params.id), {
+        payment_type_id: data.payment_type_id || undefined,
+        customer_name: data.customer_name || "",
+        customer_phone: data.customer_phone || "",
+        total_price: orderPrice,
+      });
+
+      orderItems.forEach(async (orderItem) => {
+        const orderItemData = {
+          order_id: params.id,
+          product_id: orderItem.product_id,
+          quantity: orderItem.quantity,
+          price: orderItem.price * orderItem.quantity,
+        };
+
+        const product = products.find(
+          (product) => product.id === orderItem.product_id
+        );
+
+        if (!product) {
+          return;
+        }
+
+        const orderItemsLocalStorage = JSON.parse(
+          localStorage.getItem("orderItems")!
+        );
+
+        const orderItemLocalStorage = orderItemsLocalStorage.find(
+          (orderItemLocalStorage: { product_id: number }) =>
+            orderItemLocalStorage.product_id === orderItem.product_id
+        );
+
+        const previousOrderItemQuantity = orderItemLocalStorage.quantity;
+        const newOrderItemQuantity = orderItem.quantity;
+        let productQuantity = getNewProductQuantity(
+          product.quantity,
+          newOrderItemQuantity,
+          previousOrderItemQuantity
+        );
+
+        await deleteOrdersItems(Number(params.id));
+
+        const createOrderItemPromise = createOrderItem({
+          ...orderItemData,
+          order_id: Number(params.id),
+        });
+
+        const updateProductPromise = updateProduct(orderItem.product_id, {
+          quantity: productQuantity,
+        });
+
+        await Promise.all([createOrderItemPromise, updateProductPromise]);
+      });
+
+      toast.success("Pedido atualizado com sucesso");
+
+      router.push("/");
+    } catch (error) {
+      console.error(error);
+      toast.error("Erro ao atualizar o pedido");
+    }
   };
 
   useEffect(() => {
