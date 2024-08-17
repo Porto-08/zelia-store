@@ -21,7 +21,7 @@ export default function BarGraphic({
   graphColor,
 }: BarGraphicProps) {
   return (
-    <div className="flex flex-col gap-5">
+    <div className="flex flex-col gap-10">
       <h2 className="text-2xl text-white font-bold">{graphTitle}</h2>
       <Bar
         data={{
@@ -38,6 +38,14 @@ export default function BarGraphic({
         }}
         options={{
           color: "#fff",
+          layout: {
+            padding: {
+              left: 25,
+              right: 25,
+              top: 25,
+              bottom: 25,
+            },
+          },
           plugins: {
             legend: {
               labels: {
@@ -50,8 +58,8 @@ export default function BarGraphic({
             },
             datalabels: {
               color: "#fff",
-              align: "center",
-              anchor: "center",
+              align: "top",
+              anchor: "end",
               font: {
                 size: 16,
               },

@@ -2,7 +2,7 @@ import { Order, OrderDTO, OrderItems, OrderItemsDTO } from "@/app/orders/type";
 import supabase from "../../supabase";
 import { ReportGenericData } from "@/app/reports/types";
 import moment from "moment";
-import { sortPerStatusDelivered } from "@/utils/sortPerStatusDelivered";
+import { sortPerStatusDelivered, sortPerTotalPrice } from "@/utils/sortPerStatusDelivered";
 
 export async function getOrderById(id: number): Promise<Order> {
   try {
@@ -286,7 +286,9 @@ export async function getSalesByPaymentType(): Promise<ReportGenericData[]> {
       return acc;
     }, {});
 
-    return Object.keys(dataAggregated).map((key) => ({
+    const dataAggregatedSorted = sortPerTotalPrice(dataAggregated);
+
+    return Object.keys(dataAggregatedSorted).map((key) => ({
       label: key,
       value: dataAggregated[key],
     }));
@@ -322,7 +324,9 @@ export async function getSalesByProduct(): Promise<ReportGenericData[]> {
 
     }, {});
 
-    return Object.keys(dataAggregated).map((key) => ({
+    const dataAggregatedSorted = sortPerTotalPrice(dataAggregated);
+
+    return Object.keys(dataAggregatedSorted).map((key) => ({
       label: key,
       value: dataAggregated[key].total_price,
     }));

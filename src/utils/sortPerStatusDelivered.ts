@@ -10,3 +10,14 @@ export function sortPerStatusDelivered(orders: Order[]): Order[] {
   }
   );
 }
+
+type DataToSort = {
+  [key: string]: number;
+}
+
+export function sortPerTotalPrice(data: DataToSort): DataToSort {
+  return Object.entries(data).sort((a, b) => b[1] - a[1]).reduce((acc, [key, value]) => {
+    acc[key] = value;
+    return acc;
+  }, {} as DataToSort);
+}
