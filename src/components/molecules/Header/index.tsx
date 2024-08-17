@@ -1,6 +1,10 @@
 "use client";
 import Link from "next/link";
 import { CgMenuHotdog } from "react-icons/cg";
+import { FaBoxOpen, FaHome } from "react-icons/fa";
+import { IoServer } from "react-icons/io5";
+import { MdSpaceDashboard } from "react-icons/md";
+
 import "./component.css";
 
 export default function Header() {
@@ -26,13 +30,28 @@ export default function Header() {
           <div className="hidden flex-none lg:block ">
             <ul className="menu menu-horizontal">
               <li className="text-xl">
-                <Link href="/orders">Pedidos</Link>
+                <Link href="/">
+                  <FaHome />
+                  Início
+                </Link>
               </li>
               <li className="text-xl">
-                <Link href="/products">Produtos</Link>
+                <Link href="/orders">
+                  <IoServer />
+                  Pedidos
+                </Link>
               </li>
               <li className="text-xl">
-                <Link href="/reports">Relatórios</Link>
+                <Link href="/products">
+                  <FaBoxOpen />
+                  Produtos
+                </Link>
+              </li>
+              <li className="text-xl">
+                <Link href="/reports">
+                  <MdSpaceDashboard />
+                  Relatórios
+                </Link>
               </li>
             </ul>
           </div>
@@ -46,13 +65,28 @@ export default function Header() {
         ></label>
         <ul className="menu bg-base-200 min-h-full w-80 p-4">
           <li className="text-xl">
-            <Link href="/orders">Pedidos</Link>
+            <Link href="/">
+              <FaHome />
+              Início
+            </Link>
           </li>
           <li className="text-xl">
-            <Link href="/products">Produtos</Link>
+            <Link href="/orders">
+              <IoServer />
+              Pedidos
+            </Link>
           </li>
           <li className="text-xl">
-            <Link href="/reports">Relatórios</Link>
+            <Link href="/products">
+              <FaBoxOpen />
+              Produtos
+            </Link>
+          </li>
+          <li className="text-xl">
+            <Link href="/reports">
+              <MdSpaceDashboard />
+              Relatórios
+            </Link>
           </li>
         </ul>
       </div>
