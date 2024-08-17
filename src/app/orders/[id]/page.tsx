@@ -16,6 +16,7 @@ import { getProducts, updateProduct } from "../../../../api/modules/products";
 import { PaymentType } from "@/types";
 import { Product } from "@/app/products/types";
 import { useRouter } from "next/navigation";
+import { useOrders } from "@/context/orders/OrdersContext";
 
 type PageParams = {
   params: {
@@ -37,6 +38,8 @@ export default function OrderPage({ params }: PageParams) {
     reset,
     formState: { errors },
   } = useForm<OrderItemsForm>();
+
+  const { deleteOrderHandler } = useOrders();
 
   const incrementOrderPrice = (price: number) => {
     const newOrderPrice = orderPrice + price;
@@ -158,15 +161,15 @@ export default function OrderPage({ params }: PageParams) {
   const getNewProductQuantity = (
     productQuantity: number,
     newOrderItemQuantity: number,
-    previousOrderItemQuantity?: number,
+    previousOrderItemQuantity?: number
   ) => {
     let newProductQuantity = productQuantity;
 
     if (previousOrderItemQuantity) {
       if (previousOrderItemQuantity > newOrderItemQuantity) {
-        newProductQuantity += (previousOrderItemQuantity - newOrderItemQuantity);
+        newProductQuantity += previousOrderItemQuantity - newOrderItemQuantity;
       } else {
-        newProductQuantity -= (newOrderItemQuantity - previousOrderItemQuantity);
+        newProductQuantity -= newOrderItemQuantity - previousOrderItemQuantity;
       }
     } else {
       newProductQuantity -= newOrderItemQuantity;
@@ -414,7 +417,9 @@ export default function OrderPage({ params }: PageParams) {
           </span>
         </div>
 
-        <button className="btn btn-error text-white">Excluir</button>
+        <button className="btn btn-error text-white" onClick={() => deleteOrderHandler(Number(params.id))}>
+          Excluir pedido
+        </button>
       </section>
     </main>
   );

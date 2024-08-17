@@ -2,12 +2,16 @@
 import "moment/locale/pt-br";
 import Link from "next/link";
 import LoadingContent from "@/components/atom/LoadingContent";
-import { changeOrderStatusHandler } from "../utils/changeOrderStatusHandler";
 import { OrderCard } from "@/components/molecules/Orders/OrderCard";
 import { useOrders } from "@/context/orders/OrdersContext";
+import { useEffect } from "react";
 
 export default function Home() {
-  const { orders, ordersLoading } = useOrders();
+  const { orders, ordersLoading, fetchOrders } = useOrders();
+
+  useEffect(() => {
+    fetchOrders();
+  }, []);
 
   if (ordersLoading) {
     return <LoadingContent />;

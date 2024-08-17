@@ -44,7 +44,7 @@ export function OrderCard(order: OrderCardProps) {
 
       <h4 className="text-lg font-bold mt-4">Produtos</h4>
       <ul>
-        {order.orders_items.map((orderItem: any) => (
+        {order.orders_items.map((orderItem) => (
           <li key={orderItem.id}>
             {orderItem.products.name} - {orderItem.quantity} unidade(s)
           </li>
