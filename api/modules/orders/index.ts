@@ -277,6 +277,11 @@ export async function getSalesByPaymentType(): Promise<ReportGenericData[]> {
     }
 
     const dataAggregated = data.reduce((acc: any, item: any) => {
+      if (item.payment_type_id === null) {
+        return acc;
+      }
+
+
       if (!acc[item.payment_types.name]) {
         acc[item.payment_types.name] = 0;
       }

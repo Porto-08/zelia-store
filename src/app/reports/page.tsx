@@ -7,7 +7,7 @@ import {
 } from "../../../api/modules/orders";
 
 export default async function ReportsPage() {
-  const salesByMonth = await getSalesByMonth();
+  const salesByMonth = await getSalesByMonth();  
   const salesByDay = await getSalesByDay();
   const salesByPaymentType = await getSalesByPaymentType();
   const salesByProduct = await getSalesByProduct();

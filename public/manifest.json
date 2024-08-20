@@ -1,0 +1,32 @@
+{
+  "id": "1",
+  "name": "Loja da Zélia",
+  "short_name": "LojaZelia",
+  "description": "A melhor loja de frangos do Brasil",
+  "start_url": "/",
+  "display": "standalone",
+  "orientation": "portrait",
+  "screenshots": [
+    {
+      "src": "./home.png",
+      "sizes": "1919x1079",
+      "type": "image/png",
+      "form_factor": "wide",
+      "label": "home"
+    }
+  ],
+  "background_color": "#060930",
+  "theme_color": "#060930",
+  "icons": [
+    {
+      "src": "./chicken.jpg",
+      "sizes": "360x360",
+      "type": "image/jpg"
+    },
+    {
+      "src": "./chicken2.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}
