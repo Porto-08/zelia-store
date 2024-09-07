@@ -7,10 +7,16 @@ import { MdSpaceDashboard } from "react-icons/md";
 
 import "./component.css";
 import useWindowDimensions from "@/hooks/useWindowDimensions";
+import { useOrders } from "@/context/orders/OrdersContext";
 
 export default function Header() {
+  const { fetchOrders } = useOrders();
   const dimensions = useWindowDimensions();
   const isNotSmartphone = dimensions.width > 640;
+
+  const handleFetchOrders = () => {
+    fetchOrders();
+  };
 
   return (
     <div className="sticky top-0 drawer z-50 md:static">
@@ -27,14 +33,14 @@ export default function Header() {
             </label>
           </div>
           <div className="mx-2 flex-1 px-2">
-            <Link href="/" className="btn btn-ghost text-3xl font-bold">
+            <Link href="/" className="btn btn-ghost text-3xl font-bold" onClick={handleFetchOrders}>
               Loja da Zélia
             </Link>
           </div>
           <div className="hidden flex-none lg:block ">
             <ul className="menu menu-horizontal">
               <li className="text-xl">
-                <Link href="/">
+                <Link href="/" onClick={handleFetchOrders}>
                   <FaHome />
                   Início
                 </Link>
@@ -71,7 +77,7 @@ export default function Header() {
         ></label>
         <ul className="menu bg-base-200 min-h-full w-80 p-4">
           <li className="text-xl">
-            <Link href="/">
+            <Link href="/" onClick={handleFetchOrders}>
               <FaHome />
               Início
             </Link>

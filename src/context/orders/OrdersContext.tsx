@@ -20,7 +20,9 @@ import { updateProduct } from "../../../api/modules/products";
 
 type OrdersContextData = {
   orders: Order[];
+  setOrders: (orders: Order[]) => void;
   ordersLoading: boolean;
+  setOrdersLoading: (loading: boolean) => void;
   fetchOrders: () => Promise<void>;
   changeOrderStatus: (orderId: number) => void;
   deleteOrderHandler: (orderId: number) => void;
@@ -129,6 +131,8 @@ export function OrdersProvider({ children }: OrdersProviderProps) {
         ordersLoading,
         changeOrderStatus,
         deleteOrderHandler,
+        setOrdersLoading,
+        setOrders
       }}
     >
       {children}
