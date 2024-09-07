@@ -2,7 +2,7 @@ import { Order, OrderDTO, OrderItems, OrderItemsDTO } from "@/app/orders/type";
 import supabase from "../../supabase";
 import { ReportGenericData } from "@/app/reports/types";
 import moment from "moment";
-import { sortPerStatusDelivered, sortPerTotalPrice } from "@/utils/sortPerStatusDelivered";
+import { sortPerStatusDelivered, sortPerTotalPrice } from "@/utils/sortScripts";
 
 export async function getOrderById(id: number): Promise<Order> {
   try {

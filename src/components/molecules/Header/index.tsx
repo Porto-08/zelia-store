@@ -6,8 +6,12 @@ import { IoServer } from "react-icons/io5";
 import { MdSpaceDashboard } from "react-icons/md";
 
 import "./component.css";
+import useWindowDimensions from "@/hooks/useWindowDimensions";
 
 export default function Header() {
+  const dimensions = useWindowDimensions();
+  const isNotSmartphone = dimensions.width > 640;
+
   return (
     <div className="sticky top-0 drawer z-50 md:static">
       <input id="my-drawer-3" type="checkbox" className="drawer-toggle" />
@@ -47,12 +51,14 @@ export default function Header() {
                   Produtos
                 </Link>
               </li>
-              <li className="text-xl">
-                <Link href="/reports">
-                  <MdSpaceDashboard />
-                  Relatórios
-                </Link>
-              </li>
+              {isNotSmartphone && (
+                <li className="text-xl">
+                  <Link href="/reports">
+                    <MdSpaceDashboard />
+                    Relatórios
+                  </Link>
+                </li>
+              )}
             </ul>
           </div>
         </div>
@@ -82,12 +88,14 @@ export default function Header() {
               Produtos
             </Link>
           </li>
-          <li className="text-xl">
-            <Link href="/reports">
-              <MdSpaceDashboard />
-              Relatórios
-            </Link>
-          </li>
+          {isNotSmartphone && (
+            <li className="text-xl">
+              <Link href="/reports">
+                <MdSpaceDashboard />
+                Relatórios
+              </Link>
+            </li>
+          )}
         </ul>
       </div>
     </div>
