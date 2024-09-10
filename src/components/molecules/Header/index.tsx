@@ -6,13 +6,10 @@ import { IoServer } from "react-icons/io5";
 import { MdSpaceDashboard } from "react-icons/md";
 
 import "./component.css";
-import useWindowDimensions from "@/hooks/useWindowDimensions";
 import { useOrders } from "@/context/orders/OrdersContext";
 
 export default function Header() {
   const { fetchOrders } = useOrders();
-  const dimensions = useWindowDimensions();
-  const isNotSmartphone = dimensions.width > 640;
 
   const handleFetchOrders = () => {
     fetchOrders();
@@ -33,7 +30,11 @@ export default function Header() {
             </label>
           </div>
           <div className="mx-2 flex-1 px-2">
-            <Link href="/" className="btn btn-ghost text-3xl font-bold" onClick={handleFetchOrders}>
+            <Link
+              href="/"
+              className="btn btn-ghost text-3xl font-bold"
+              onClick={handleFetchOrders}
+            >
               Loja da Zélia
             </Link>
           </div>
@@ -57,14 +58,12 @@ export default function Header() {
                   Produtos
                 </Link>
               </li>
-              {isNotSmartphone && (
-                <li className="text-xl">
-                  <Link href="/reports">
-                    <MdSpaceDashboard />
-                    Relatórios
-                  </Link>
-                </li>
-              )}
+              <li className="text-xl reports-link">
+                <Link href="/reports">
+                  <MdSpaceDashboard />
+                  Relatórios
+                </Link>
+              </li>
             </ul>
           </div>
         </div>
@@ -94,14 +93,12 @@ export default function Header() {
               Produtos
             </Link>
           </li>
-          {isNotSmartphone && (
-            <li className="text-xl">
-              <Link href="/reports">
-                <MdSpaceDashboard />
-                Relatórios
-              </Link>
-            </li>
-          )}
+          <li className="text-xl reports-link">
+            <Link href="/reports">
+              <MdSpaceDashboard />
+              Relatórios
+            </Link>
+          </li>
         </ul>
       </div>
     </div>

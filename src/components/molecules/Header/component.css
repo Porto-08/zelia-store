@@ -6,6 +6,10 @@
   display: none;
 }
 
+.reports-link {
+  display: block;
+}
+
 @media (max-width: 768px) {
   .default-menu {
     display: none;
@@ -13,5 +17,9 @@
 
   .mobile-menu {
     display: flex;
+  }
+
+  .reports-link {
+    display: none;
   }
 }
