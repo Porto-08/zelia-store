@@ -161,22 +161,18 @@ export default function OrderPage({ params }: PageParams) {
   const getNewProductQuantity = (
     productQuantity: number,
     newOrderItemQuantity: number,
-    previousOrderItemQuantity?: number
+    previousOrderItemQuantity?: number,
   ) => {
-    let newProductQuantity = productQuantity;
-
-    if (previousOrderItemQuantity) {
-      if (previousOrderItemQuantity > newOrderItemQuantity) {
-        newProductQuantity += previousOrderItemQuantity - newOrderItemQuantity;
-      } else {
-        newProductQuantity -= newOrderItemQuantity - previousOrderItemQuantity;
-      }
-    } else {
-      newProductQuantity -= newOrderItemQuantity;
+    if (newOrderItemQuantity < 0 || productQuantity < 0 || (previousOrderItemQuantity && previousOrderItemQuantity < 0)) {
+      throw new Error('Quantities cannot be negative');
     }
 
-    return newProductQuantity;
-  };
+    if (previousOrderItemQuantity == null) {
+      return productQuantity - newOrderItemQuantity;
+    }
+
+    return productQuantity + previousOrderItemQuantity - newOrderItemQuantity;
+  }
 
   const onSubmit = async (data: OrderItemsForm) => {
     if (orderItems.length === 0) {
@@ -222,12 +218,12 @@ export default function OrderPage({ params }: PageParams) {
             orderItemLocalStorage.product_id === orderItem.product_id
         );
 
-        const previousOrderItemQuantity = orderItemLocalStorage.quantity;
+        const previousOrderItemQuantity = orderItemLocalStorage?.quantity;
         const newOrderItemQuantity = orderItem.quantity;
         let productQuantity = getNewProductQuantity(
           product.quantity,
           newOrderItemQuantity,
-          previousOrderItemQuantity
+          previousOrderItemQuantity,
         );
 
         await deleteOrdersItems(Number(params.id));
