@@ -25,6 +25,9 @@ export function OrderCard(order: OrderCardProps) {
 
   return (
     <div key={order.id} className="bg-base-300 p-4 rounded-md shadow-md">
+      {order.status === OrderStatus.RETIRADO && (
+        <p className="text-green-500 font-bold">Pedido retirado</p>
+      )}
       <h3 className="text-xl font-bold">
         {order.customer_name || "Nome não Informado"}
       </h3>
@@ -52,9 +55,6 @@ export function OrderCard(order: OrderCardProps) {
       </ul>
 
       <div className="flex flex-col justify-between">
-        {order.status === OrderStatus.RETIRADO && (
-          <p className="text-green-500 font-bold mt-4">Pedido retirado</p>
-        )}
         {order.status !== OrderStatus.RETIRADO && (
           <button
             className="mt-4 btn btn-success text-white font-bold py-2 px-4"
@@ -65,9 +65,11 @@ export function OrderCard(order: OrderCardProps) {
           </button>
         )}
 
-        <Link href={`/orders/${order.id}`} className="btn btn-primary mt-4">
-          Editar pedido
-        </Link>
+        {order.status !== OrderStatus.RETIRADO && (
+          <Link href={`/orders/${order.id}`} className="btn btn-primary mt-4">
+            Editar pedido
+          </Link>
+        )}
       </div>
     </div>
   );

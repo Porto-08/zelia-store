@@ -13,7 +13,7 @@ export default async function ReportsPage() {
   const salesByProduct = await getSalesByProduct();
 
   return (
-    <main className="flex flex-col gap-10 px-6 m-auto max-w-7xl">
+    <main className="flex flex-col gap-10 px-10 m-auto max-w-full">
       <div className="flex flex-wrap gap-5 item-center justify-between">
         <div>
           <h1 className="text-primary text-4xl font-bold">Relatórios</h1>
@@ -51,14 +51,14 @@ export default async function ReportsPage() {
             />
           </div>
 
-          <div className="bg-base-300 p-5 rounded-lg shadow-md">
+          {/* <div className="bg-base-300 p-5 rounded-lg shadow-md">
             <BarGraphic
               data={salesByProduct}
               label="Produto"
               graphTitle="Vendas por produto"
               graphColor="#4441fa"
             />
-          </div>
+          </div> */}
         </div>
       </div>
     </main>

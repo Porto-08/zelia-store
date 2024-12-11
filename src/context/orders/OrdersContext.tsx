@@ -42,7 +42,7 @@ export function OrdersProvider({ children }: OrdersProviderProps) {
   const fetchOrders = async () => {
     try {
       setOrdersLoading(true);
-      const response = await getOrders(30);
+      const response = await getOrders(50);
       setOrders(response);
     } catch (error) {
       console.error(error);

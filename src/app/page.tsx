@@ -26,7 +26,7 @@ export default function Home() {
           </h1>
 
           <p className="text-gray-300">
-            Aqui você pode visualizar os utlimos 30 pedidos realizados. {""}
+            Aqui você pode visualizar os ultimos pedidos realizados. {""}
             <Link href="/orders" className="text-primary underline">
               Ver mais.
             </Link>
