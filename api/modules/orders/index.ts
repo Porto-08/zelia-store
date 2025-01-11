@@ -1,8 +1,50 @@
 import { Order, OrderDTO, OrderItems, OrderItemsDTO } from "@/app/orders/type";
 import supabase from "../../supabase";
-import { ReportGenericData } from "@/app/reports/types";
+import { ReportGenericData, SalesAndStockFromProducts } from "@/app/reports/types";
 import moment from "moment";
 import { sortPerStatusDelivered, sortPerTotalPrice } from "@/utils/sortScripts";
+
+export async function getProductsStock(): Promise<SalesAndStockFromProducts[]> {
+  try {
+    const { data, error } = await supabase.from("orders_items").select(`
+        *,
+        products(*)
+      `).gte("created_at", moment().format("YYYY-MM-DD"));
+
+    if (error) {
+      throw error;
+    }
+
+    const dataAggregated = data.reduce((acc: any, item: any) => {
+      if (!acc[item.products.name]) {
+        acc[item.products.name] = {
+          quantity_sale: 0,
+          left_in_stock: item.products.quantity,
+        };
+      }
+
+      acc[item.products.name].quantity_sale += item.quantity;
+      acc[item.products.name].left_in_stock = item.products.quantity - acc[item.products.name].quantity_sale;
+
+      if (acc[item.products.name].left_in_stock < 0) {
+        acc[item.products.name].left_in_stock += acc[item.products.name].quantity_sale;
+      }
+      
+      return acc;
+    }, {});
+
+    console.log(dataAggregated);
+    
+    return Object.keys(dataAggregated).map((key) => ({
+      productName: key,
+      quantity_sale: dataAggregated[key].quantity_sale,
+      left_in_stock: dataAggregated[key].left_in_stock,
+    }));
+  } catch (error) {
+    console.error(error);
+    throw error;
+  }
+}
 
 export async function getOrderById(id: number): Promise<Order> {
   try {

@@ -7,9 +7,16 @@ import { useOrders } from "@/context/orders/OrdersContext";
 import { useEffect } from "react";
 
 export default function Home() {
-  const { orders, ordersLoading, fetchOrders } = useOrders();
+  const {
+    orders,
+    ordersLoading,
+    fetchOrders,
+    getProductsStockResume,
+    productsStockResume,
+  } = useOrders();
 
   useEffect(() => {
+    getProductsStockResume();
     fetchOrders();
   }, []);
 
@@ -19,7 +26,33 @@ export default function Home() {
 
   return (
     <main className="px-6 m-auto max-w-7xl">
-      <div className="flex flex-wrap gap-5 justify-between items-center mt-8">
+
+      {productsStockResume && productsStockResume.length > 0 && (
+        <div className="flex flex-col flex-wrap gap-5 mb-8">
+          <h1 className="text-4xl font-bold">
+            <span className="text-primary">Resumo de Estoque</span>
+          </h1>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+            {productsStockResume.map((product) => (
+              <div
+                key={product.productName}
+                className="bg-base-300 p-4 rounded-lg shadow-md"
+              >
+                <h3 className="text-xl font-bold">{product.productName}</h3>
+                <p className="text-white text-lg">
+                  Vendidos: <span className="text-green-700">{product.quantity_sale}</span>
+                </p>
+                <p className="text-white text-lg">
+                  Estoque: <span className="text-red-700">{product.left_in_stock}</span>
+                </p>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+
+      <div className="flex flex-wrap gap-5 justify-between items-center">
         <div>
           <h1 className="text-4xl font-bold">
             <span className="text-primary">Ultimos pedidos</span>

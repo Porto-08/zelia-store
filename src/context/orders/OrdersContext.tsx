@@ -11,12 +11,14 @@ import {
   deleteOrdersItems,
   getOrderById,
   getOrders,
+  getProductsStock
 } from "../../../api/modules/orders";
 import { toast } from "react-toastify";
 import { changeOrderStatusHandler } from "@/utils/changeOrderStatusHandler";
 import { useRouter } from "next/navigation";
 import { Product } from "@/app/products/types";
 import { updateProduct } from "../../../api/modules/products";
+import { SalesAndStockFromProducts } from "@/app/reports/types";
 
 type OrdersContextData = {
   orders: Order[];
@@ -26,6 +28,9 @@ type OrdersContextData = {
   fetchOrders: () => Promise<void>;
   changeOrderStatus: (orderId: number) => void;
   deleteOrderHandler: (orderId: number) => void;
+  getProductsStockResume: () => void;
+  productsStockResume: SalesAndStockFromProducts[];
+  setProductsStockResume: (products: SalesAndStockFromProducts[]) => void;
 };
 
 const OrdersContext = createContext({} as OrdersContextData);
@@ -37,6 +42,7 @@ type OrdersProviderProps = {
 export function OrdersProvider({ children }: OrdersProviderProps) {
   const [orders, setOrders] = useState<Order[]>([]);
   const [ordersLoading, setOrdersLoading] = useState(true);
+  const [productsStockResume, setProductsStockResume] = useState<SalesAndStockFromProducts[]>([]);
   const router = useRouter();
 
   const fetchOrders = async () => {
@@ -49,6 +55,17 @@ export function OrdersProvider({ children }: OrdersProviderProps) {
       toast.error("Erro ao buscar os pedidos");
     } finally {
       setOrdersLoading(false);
+    }
+  };
+
+  const getProductsStockResume = async () => {
+    try {
+      const response = await getProductsStock();
+      setProductsStockResume(response);
+    } catch (error) {
+      console.error(error);
+      setProductsStockResume([]);
+      toast.error("Erro ao buscar o resumo de estoque");
     }
   };
 
@@ -132,7 +149,10 @@ export function OrdersProvider({ children }: OrdersProviderProps) {
         changeOrderStatus,
         deleteOrderHandler,
         setOrdersLoading,
-        setOrders
+        setOrders,
+        setProductsStockResume,
+        productsStockResume,
+        getProductsStockResume
       }}
     >
       {children}
